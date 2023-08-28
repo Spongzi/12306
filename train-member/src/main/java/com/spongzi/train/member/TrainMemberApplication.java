@@ -1,13 +1,11 @@
-package com.spongzi.train12306;
+package com.spongzi.train.member;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Train12306Application {
-
+public class TrainMemberApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Train12306Application.class, args);
+        SpringApplication.run(TrainMemberApplication.class, args);
     }
-
 }
