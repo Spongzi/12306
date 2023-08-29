@@ -4,6 +4,7 @@ import com.spongzi.train.common.resp.CommonResp;
 import com.spongzi.train.member.domain.req.MemberRegisterReq;
 import com.spongzi.train.member.service.MemberService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,7 +26,7 @@ public class MemberController {
     }
 
     @PostMapping("/registry")
-    public CommonResp<Long> registry(@RequestBody MemberRegisterReq req) {
+    public CommonResp<Long> registry(@RequestBody @Valid MemberRegisterReq req) {
         return CommonResp.<Long>builder().content(memberService.registry(req)).message("注册成功！").build();
     }
 }
