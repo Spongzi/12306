@@ -2,6 +2,7 @@ package com.spongzi.train.member.service;
 
 import cn.hutool.core.collection.CollUtil;
 import com.spongzi.train.common.exception.BusinessException;
+import com.spongzi.train.common.utils.SnowUtil;
 import com.spongzi.train.member.domain.Member;
 import com.spongzi.train.member.domain.MemberExample;
 import com.spongzi.train.member.domain.req.MemberRegisterReq;
@@ -50,7 +51,7 @@ public class MemberService {
 
         // 创建用户并且添加到数据库中
         Member member = new Member();
-        member.setId(System.currentTimeMillis());
+        member.setId(SnowUtil.getSnowflakeNextId());
         member.setMobile(mobile);
         memberMapper.insert(member);
         return member.getId();
