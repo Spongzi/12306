@@ -1,8 +1,10 @@
 package com.spongzi.train.member.controller;
 
 import com.spongzi.train.common.resp.CommonResp;
+import com.spongzi.train.member.domain.req.MemberLoginReq;
 import com.spongzi.train.member.domain.req.MemberRegisterReq;
 import com.spongzi.train.member.domain.req.MemberSendCodeReq;
+import com.spongzi.train.member.domain.resp.MemberLoginResp;
 import com.spongzi.train.member.service.MemberService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -35,5 +37,11 @@ public class MemberController {
     public CommonResp<Object> sendCode(@RequestBody @Valid MemberSendCodeReq req) {
         memberService.sendCode(req);
         return CommonResp.builder().message("发送验证码成功！").build();
+    }
+
+    @PostMapping("/login")
+    public CommonResp<MemberLoginResp> Login(@RequestBody @Valid MemberLoginReq req) {
+        MemberLoginResp loginResp = memberService.login(req);
+        return CommonResp.<MemberLoginResp>builder().content(loginResp).message("用户登录成功").build();
     }
 }
