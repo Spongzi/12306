@@ -1,4 +1,4 @@
-package com.spongzi.train.member.aspect;
+package com.spongzi.train.common.aspect;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.PropertyPreFilters;
