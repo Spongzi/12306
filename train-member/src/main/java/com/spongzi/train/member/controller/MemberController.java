@@ -3,6 +3,7 @@ package com.spongzi.train.member.controller;
 import com.spongzi.train.member.service.MemberService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,12 @@ public class MemberController {
     private MemberService memberService;
 
     @GetMapping("/count")
-    public Long hello() {
+    public Long count() {
         return memberService.count();
+    }
+
+    @PostMapping("/registry")
+    public Long registry(String mobile) {
+        return memberService.registry(mobile);
     }
 }
