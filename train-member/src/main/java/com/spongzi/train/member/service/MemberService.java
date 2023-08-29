@@ -6,6 +6,7 @@ import com.spongzi.train.common.utils.SnowUtil;
 import com.spongzi.train.member.domain.Member;
 import com.spongzi.train.member.domain.MemberExample;
 import com.spongzi.train.member.domain.req.MemberRegisterReq;
+import com.spongzi.train.member.domain.req.MemberSendCodeReq;
 import com.spongzi.train.member.mapper.MemberMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -55,5 +56,37 @@ public class MemberService {
         member.setMobile(mobile);
         memberMapper.insert(member);
         return member.getId();
+    }
+
+    /**
+     * 发送代码
+     *
+     * @param req 要求事情
+     * @return {@link Long}
+     */
+    public void sendCode(MemberSendCodeReq req) {
+        // 获取当前请求体中的数据
+        String mobile = req.getMobile();
+
+        // 构造查询信息
+        MemberExample memberExample = new MemberExample();
+        memberExample.createCriteria().andMobileEqualTo(mobile);
+
+        // 如果手机号不存在，则插入一条记录
+        List<Member> members = memberMapper.selectByExample(memberExample);
+        if (CollUtil.isEmpty(members)) {
+            Member member = new Member();
+            member.setId(SnowUtil.getSnowflakeNextId());
+            member.setMobile(mobile);
+            memberMapper.insert(member);
+        }
+
+        // 生成验证码
+        // String code = RandomUtil.randomString(4);
+        String code = "8888";
+
+        // 保存短信记录表：手机号，短信验证码，有效期，是否已使用，业务类型，发送时间，使用时间
+
+        // 对接短信通道，发送短信
     }
 }
