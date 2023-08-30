@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.spongzi.train.common.exception.BusinessException;
+import com.spongzi.train.common.utils.JwtUtil;
 import com.spongzi.train.common.utils.SnowUtil;
 import com.spongzi.train.member.domain.Member;
 import com.spongzi.train.member.domain.MemberExample;
@@ -104,8 +105,10 @@ public class MemberService {
             throw new BusinessException(MEMBER_MOBILE_CODE_ERROR);
         }
 
-
-        return BeanUtil.copyProperties(memberByDb, MemberLoginResp.class);
+        MemberLoginResp memberLoginResp = BeanUtil.copyProperties(memberByDb, MemberLoginResp.class);
+        String token = JwtUtil.createToken(memberLoginResp.getId(), memberLoginResp.getMobile());
+        memberLoginResp.setToken(token);
+        return memberLoginResp;
     }
 
     private Member selectMembersByMobile(String mobile) {
