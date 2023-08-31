@@ -3,6 +3,7 @@ package com.spongzi.train.member.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
+import com.github.pagehelper.PageHelper;
 import com.spongzi.train.common.context.LoginMemberContext;
 import com.spongzi.train.common.utils.SnowUtil;
 import com.spongzi.train.member.domain.Passenger;
@@ -38,6 +39,7 @@ public class PassengerService {
         if (ObjectUtil.isNotNull(req.getMemberId())) {
             criteria.andMemberIdEqualTo(req.getMemberId());
         }
+        PageHelper.startPage(1, 2);
         List<Passenger> passengers = passengerMapper.selectByExample(passengerExample);
         return BeanUtil.copyToList(passengers, PassengerQueryResp.class);
     }
