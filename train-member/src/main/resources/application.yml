@@ -9,6 +9,8 @@ spring:
     url: jdbc:mysql://192.168.3.128:3306/train_member?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai
     username: root
     password: root
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 
 logging:
   config: classpath:logback.xml
