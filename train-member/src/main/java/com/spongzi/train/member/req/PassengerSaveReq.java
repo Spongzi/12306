@@ -1,8 +1,8 @@
-package com.spongzi.train.member.domain.resp;
+package com.spongzi.train.member.req;
 
 import java.util.Date;
 
-public class PassengerQueryResp {
+public class PassengerSaveReq {
     private Long id;
 
     private Long memberId;

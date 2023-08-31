@@ -1,10 +1,10 @@
 package com.spongzi.train.member.controller;
 
 import com.spongzi.train.common.resp.CommonResp;
-import com.spongzi.train.member.domain.req.MemberLoginReq;
-import com.spongzi.train.member.domain.req.MemberRegisterReq;
-import com.spongzi.train.member.domain.req.MemberSendCodeReq;
-import com.spongzi.train.member.domain.resp.MemberLoginResp;
+import com.spongzi.train.member.req.MemberLoginReq;
+import com.spongzi.train.member.req.MemberRegisterReq;
+import com.spongzi.train.member.req.MemberSendCodeReq;
+import com.spongzi.train.member.resp.MemberLoginResp;
 import com.spongzi.train.member.service.MemberService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;

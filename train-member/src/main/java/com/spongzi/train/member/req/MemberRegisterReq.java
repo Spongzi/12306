@@ -1,4 +1,4 @@
-package com.spongzi.train.member.domain.req;
+package com.spongzi.train.member.req;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

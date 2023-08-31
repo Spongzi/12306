@@ -1,4 +1,4 @@
-package com.spongzi.train.member.domain.resp;
+package com.spongzi.train.member.resp;
 
 import lombok.Data;
 
