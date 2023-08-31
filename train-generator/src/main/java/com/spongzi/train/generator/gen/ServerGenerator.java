@@ -16,8 +16,8 @@ import java.util.*;
 public class ServerGenerator {
     static boolean readOnly = true;
     static String vuePath = "admin/src/views/main/";
-    static String serverPath = "[module]/src/main/java/com/spongzi/train/[module]/";
-    static String pomPath = "generator/pom.xml";
+    static String serverPath = "[module]/src/main/java/com/spongzi/train/[module_src]/";
+    static String pomPath = "train-generator/pom.xml";
     static String module = "";
     static {
         new File(serverPath).mkdirs();
@@ -28,14 +28,16 @@ public class ServerGenerator {
         String generatorPath = getGeneratorPath();
         // 比如generator-config-member.xml，得到module = member
         module = generatorPath.replace("src/main/resources/generator-config-", "").replace(".xml", "");
+        String module_src = module;
         module = "train-" + module;
         System.out.println("module: " + module);
         serverPath = serverPath.replace("[module]", module);
+        serverPath = serverPath.replace("[module_src]", module_src);
         // new File(servicePath).mkdirs();
         System.out.println("servicePath: " + serverPath);
 
         // 读取table节点
-        Document document = new SAXReader().read("generator/" + generatorPath);
+        Document document = new SAXReader().read("train-generator/" + generatorPath);
         Node table = document.selectSingleNode("//table");
         System.out.println(table);
         Node tableName = table.selectSingleNode("@tableName");
@@ -67,7 +69,7 @@ public class ServerGenerator {
 
         // 组装参数
         Map<String, Object> param = new HashMap<>();
-        param.put("module", module);
+        param.put("module", module_src);
         param.put("Domain", Domain);
         param.put("domain", domain);
         param.put("do_main", do_main);

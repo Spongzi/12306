@@ -18,7 +18,7 @@
         <module>train-member</module>
         <module>train-common</module>
         <module>train-gateway</module>
-        <module>trian-generator</module>
+        <module>train-generator</module>
         <module>train-business</module>
     </modules>
 

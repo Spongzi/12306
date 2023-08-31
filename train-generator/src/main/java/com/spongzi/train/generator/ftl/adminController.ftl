@@ -1,12 +1,12 @@
-package com.jiawa.train.${module}.controller.admin;
+package com.spongzi.train.${module}.controller.admin;
 
-import com.jiawa.train.common.context.LoginMemberContext;
-import com.jiawa.train.common.resp.CommonResp;
-import com.jiawa.train.common.resp.PageResp;
-import com.jiawa.train.${module}.req.${Domain}QueryReq;
-import com.jiawa.train.${module}.req.${Domain}SaveReq;
-import com.jiawa.train.${module}.resp.${Domain}QueryResp;
-import com.jiawa.train.${module}.service.${Domain}Service;
+import com.spongzi.train.common.context.LoginMemberContext;
+import com.spongzi.train.common.resp.CommonResp;
+import com.spongzi.train.common.resp.PageResp;
+import com.spongzi.train.${module}.req.${Domain}QueryReq;
+import com.spongzi.train.${module}.req.${Domain}SaveReq;
+import com.spongzi.train.${module}.resp.${Domain}QueryResp;
+import com.spongzi.train.${module}.service.${Domain}Service;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -21,19 +21,19 @@ public class ${Domain}AdminController {
     @PostMapping("/save")
     public CommonResp<Object> save(@Valid @RequestBody ${Domain}SaveReq req) {
         ${domain}Service.save(req);
-        return new CommonResp<>();
+        return CommonResp.builder().build();
     }
 
     @GetMapping("/query-list")
     public CommonResp<PageResp<${Domain}QueryResp>> queryList(@Valid ${Domain}QueryReq req) {
         PageResp<${Domain}QueryResp> list = ${domain}Service.queryList(req);
-        return new CommonResp<>(list);
+        return CommonResp.<PageResp<${Domain}QueryResp>>builder().content(list).build();
     }
 
     @DeleteMapping("/delete/{id}")
     public CommonResp<Object> delete(@PathVariable Long id) {
         ${domain}Service.delete(id);
-        return new CommonResp<>();
+        return CommonResp.builder().build();
     }
 
 }
