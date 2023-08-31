@@ -32,4 +32,10 @@ public class PassengerController {
                 .message("查询成功！")
                 .build();
     }
+
+    @DeleteMapping("/delete/{id}")
+    public CommonResp<Object> delete(@PathVariable Long id) {
+        passengerService.delete(id);
+        return CommonResp.builder().message("删除成功").build();
+    }
 }
