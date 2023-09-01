@@ -1,15 +1,16 @@
 package com.spongzi.train.business.controller.admin;
 
-import com.spongzi.train.common.context.LoginMemberContext;
-import com.spongzi.train.common.resp.CommonResp;
-import com.spongzi.train.common.resp.PageResp;
 import com.spongzi.train.business.req.TrainQueryReq;
 import com.spongzi.train.business.req.TrainSaveReq;
 import com.spongzi.train.business.resp.TrainQueryResp;
 import com.spongzi.train.business.service.TrainService;
+import com.spongzi.train.common.resp.CommonResp;
+import com.spongzi.train.common.resp.PageResp;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/train")
@@ -36,4 +37,9 @@ public class TrainAdminController {
         return CommonResp.builder().build();
     }
 
+    @GetMapping("/query-list")
+    public CommonResp<List<TrainQueryResp>> queryList() {
+        List<TrainQueryResp> list = trainService.queryAll();
+        return CommonResp.<List<TrainQueryResp>>builder().content(list).build();
+    }
 }
