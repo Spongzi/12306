@@ -1,7 +1,6 @@
 package com.spongzi.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
@@ -37,11 +36,8 @@ public class StationService {
         Station station = BeanUtil.copyProperties(req, Station.class);
         if (ObjectUtil.isNull(station.getId())) {
             // 保存之前判断唯一键
-            StationExample stationExample = new StationExample();
-            StationExample.Criteria criteria = stationExample.createCriteria();
-            criteria.andNameEqualTo(req.getName());
-            List<Station> list = stationMapper.selectByExample(stationExample);
-            if (CollUtil.isNotEmpty(list)) {
+            Station stationDB = selectByUnique(req.getName());
+            if (ObjectUtil.isNotEmpty(stationDB)) {
                 throw new BusinessException(BUSINESS_STATION_NAME_UNIQUE_ERROR);
             }
 
@@ -53,6 +49,13 @@ public class StationService {
             station.setUpdateTime(now);
             stationMapper.updateByPrimaryKey(station);
         }
+    }
+
+    private Station selectByUnique(String name) {
+        StationExample stationExample = new StationExample();
+        StationExample.Criteria criteria = stationExample.createCriteria();
+        criteria.andNameEqualTo(name);
+        return stationMapper.selectByExample(stationExample).get(0);
     }
 
     public PageResp<StationQueryResp> queryList(StationQueryReq req) {
