@@ -1,6 +1,7 @@
 package com.spongzi.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
@@ -11,6 +12,7 @@ import com.spongzi.train.business.mapper.StationMapper;
 import com.spongzi.train.business.req.StationQueryReq;
 import com.spongzi.train.business.req.StationSaveReq;
 import com.spongzi.train.business.resp.StationQueryResp;
+import com.spongzi.train.common.exception.BusinessException;
 import com.spongzi.train.common.resp.PageResp;
 import com.spongzi.train.common.utils.SnowUtil;
 import jakarta.annotation.Resource;
@@ -19,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.spongzi.train.common.exception.BusinessExceptionEnum.BUSINESS_STATION_NAME_UNIQUE_ERROR;
 
 @Service
 public class StationService {
@@ -32,6 +36,15 @@ public class StationService {
         DateTime now = DateTime.now();
         Station station = BeanUtil.copyProperties(req, Station.class);
         if (ObjectUtil.isNull(station.getId())) {
+            // 保存之前判断唯一键
+            StationExample stationExample = new StationExample();
+            StationExample.Criteria criteria = stationExample.createCriteria();
+            criteria.andNameEqualTo(req.getName());
+            List<Station> list = stationMapper.selectByExample(stationExample);
+            if (CollUtil.isNotEmpty(list)) {
+                throw new BusinessException(BUSINESS_STATION_NAME_UNIQUE_ERROR);
+            }
+
             station.setId(SnowUtil.getSnowflakeNextId());
             station.setCreateTime(now);
             station.setUpdateTime(now);
