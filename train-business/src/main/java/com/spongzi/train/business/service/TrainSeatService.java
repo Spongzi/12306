@@ -6,9 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.spongzi.train.business.domain.TrainCarriage;
-import com.spongzi.train.business.domain.TrainSeat;
-import com.spongzi.train.business.domain.TrainSeatExample;
+import com.spongzi.train.business.domain.*;
 import com.spongzi.train.business.enums.SeatColEnum;
 import com.spongzi.train.business.mapper.TrainSeatMapper;
 import com.spongzi.train.business.req.TrainSeatQueryReq;
@@ -119,5 +117,13 @@ public class TrainSeatService {
                 }
             }
         }
+    }
+
+    public List<TrainSeat> selectByTrainCode(String trainCode) {
+        TrainSeatExample trainSeatExample = new TrainSeatExample();
+        trainSeatExample.setOrderByClause("`id` asc");
+        TrainSeatExample.Criteria criteria = trainSeatExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode);
+        return trainSeatMapper.selectByExample(trainSeatExample);
     }
 }
