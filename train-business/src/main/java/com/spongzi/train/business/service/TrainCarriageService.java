@@ -7,6 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.spongzi.train.business.domain.TrainCarriage;
 import com.spongzi.train.business.domain.TrainCarriageExample;
+import com.spongzi.train.business.enums.SeatColEnum;
 import com.spongzi.train.business.mapper.TrainCarriageMapper;
 import com.spongzi.train.business.req.TrainCarriageQueryReq;
 import com.spongzi.train.business.req.TrainCarriageSaveReq;
@@ -31,6 +32,11 @@ public class TrainCarriageService {
     public void save(TrainCarriageSaveReq req) {
         DateTime now = DateTime.now();
         TrainCarriage trainCarriage = BeanUtil.copyProperties(req, TrainCarriage.class);
+        // 自动计算出列数和座位号
+        List<SeatColEnum> seatColEnums = SeatColEnum.getColsByType(req.getSeatType());
+        req.setColCount(seatColEnums.size());
+        req.setSeatCount(req.getColCount() * req.getRowCount());
+
         if (ObjectUtil.isNull(trainCarriage.getId())) {
             trainCarriage.setId(SnowUtil.getSnowflakeNextId());
             trainCarriage.setCreateTime(now);
