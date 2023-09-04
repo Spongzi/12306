@@ -11,6 +11,7 @@ import com.spongzi.train.business.mapper.TrainStationMapper;
 import com.spongzi.train.business.req.TrainStationQueryReq;
 import com.spongzi.train.business.req.TrainStationSaveReq;
 import com.spongzi.train.business.resp.TrainStationQueryResp;
+import com.spongzi.train.common.exception.BusinessException;
 import com.spongzi.train.common.resp.PageResp;
 import com.spongzi.train.common.utils.SnowUtil;
 import jakarta.annotation.Resource;
@@ -19,6 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.spongzi.train.common.exception.BusinessExceptionEnum.BUSINESS_TRAIN_STATION_INDEX_UNIQUE_ERROR;
+import static com.spongzi.train.common.exception.BusinessExceptionEnum.BUSINESS_TRAIN_STATION_NAME_UNIQUE_ERROR;
 
 @Service
 public class TrainStationService {
@@ -32,6 +36,16 @@ public class TrainStationService {
         DateTime now = DateTime.now();
         TrainStation trainStation = BeanUtil.copyProperties(req, TrainStation.class);
         if (ObjectUtil.isNull(trainStation.getId())) {
+            // 同车次站序已存在
+            TrainStation trainStationDB = selectByUnique(req.getTrainCode(), req.getIndex());
+            if (ObjectUtil.isNotEmpty(trainStationDB)) {
+                throw new BusinessException(BUSINESS_TRAIN_STATION_INDEX_UNIQUE_ERROR);
+            }
+            // 同车次站名已存在
+            trainStationDB = selectByUnique(req.getTrainCode(), req.getName());
+            if (ObjectUtil.isNotEmpty(trainStationDB)) {
+                throw new BusinessException(BUSINESS_TRAIN_STATION_NAME_UNIQUE_ERROR);
+            }
             trainStation.setId(SnowUtil.getSnowflakeNextId());
             trainStation.setCreateTime(now);
             trainStation.setUpdateTime(now);
@@ -70,5 +84,21 @@ public class TrainStationService {
 
     public void delete(Long id) {
         trainStationMapper.deleteByPrimaryKey(id);
+    }
+
+    private TrainStation selectByUnique(String trainCode, Integer index) {
+        TrainStationExample TrainStationExample = new TrainStationExample();
+        TrainStationExample.Criteria criteria = TrainStationExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode)
+                .andIndexEqualTo(index);
+        return trainStationMapper.selectByExample(TrainStationExample).get(0);
+    }
+
+    private TrainStation selectByUnique(String trainCode, String name) {
+        TrainStationExample TrainStationExample = new TrainStationExample();
+        TrainStationExample.Criteria criteria = TrainStationExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode)
+                .andNameEqualTo(name);
+        return trainStationMapper.selectByExample(TrainStationExample).get(0);
     }
 }

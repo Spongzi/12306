@@ -12,6 +12,7 @@ import com.spongzi.train.business.mapper.TrainCarriageMapper;
 import com.spongzi.train.business.req.TrainCarriageQueryReq;
 import com.spongzi.train.business.req.TrainCarriageSaveReq;
 import com.spongzi.train.business.resp.TrainCarriageQueryResp;
+import com.spongzi.train.common.exception.BusinessException;
 import com.spongzi.train.common.resp.PageResp;
 import com.spongzi.train.common.utils.SnowUtil;
 import jakarta.annotation.Resource;
@@ -20,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.spongzi.train.common.exception.BusinessExceptionEnum.BUSINESS_TRAIN_CARRIAGE_INDEX_UNIQUE_ERROR;
 
 @Service
 public class TrainCarriageService {
@@ -38,6 +41,10 @@ public class TrainCarriageService {
         req.setSeatCount(req.getColCount() * req.getRowCount());
 
         if (ObjectUtil.isNull(trainCarriage.getId())) {
+            TrainCarriage trainCarriageDB = selectByUnique(req.getTrainCode(), req.getIndex());
+            if (ObjectUtil.isNotEmpty(trainCarriageDB)) {
+                throw new BusinessException(BUSINESS_TRAIN_CARRIAGE_INDEX_UNIQUE_ERROR);
+            }
             trainCarriage.setId(SnowUtil.getSnowflakeNextId());
             trainCarriage.setCreateTime(now);
             trainCarriage.setUpdateTime(now);
@@ -83,5 +90,13 @@ public class TrainCarriageService {
         TrainCarriageExample.Criteria criteria = trainCarriageExample.createCriteria();
         criteria.andTrainCodeEqualTo(trainCode);
         return trainCarriageMapper.selectByExample(trainCarriageExample);
+    }
+
+    private TrainCarriage selectByUnique(String trainCode, Integer index) {
+        TrainCarriageExample trainCarriageExample = new TrainCarriageExample();
+        TrainCarriageExample.Criteria criteria = trainCarriageExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode)
+                .andIndexEqualTo(index);
+        return trainCarriageMapper.selectByExample(trainCarriageExample).get(0);
     }
 }

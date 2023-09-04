@@ -11,6 +11,7 @@ import com.spongzi.train.business.mapper.TrainMapper;
 import com.spongzi.train.business.req.TrainQueryReq;
 import com.spongzi.train.business.req.TrainSaveReq;
 import com.spongzi.train.business.resp.TrainQueryResp;
+import com.spongzi.train.common.exception.BusinessException;
 import com.spongzi.train.common.resp.PageResp;
 import com.spongzi.train.common.utils.SnowUtil;
 import jakarta.annotation.Resource;
@@ -19,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.spongzi.train.common.exception.BusinessExceptionEnum.BUSINESS_TRAIN_CODE_UNIQUE_ERROR;
 
 @Service
 public class TrainService {
@@ -32,6 +35,10 @@ public class TrainService {
         DateTime now = DateTime.now();
         Train train = BeanUtil.copyProperties(req, Train.class);
         if (ObjectUtil.isNull(train.getId())) {
+            Train trainDB = selectByUnique(req.getCode());
+            if (ObjectUtil.isNotEmpty(trainDB)) {
+                throw new BusinessException(BUSINESS_TRAIN_CODE_UNIQUE_ERROR);
+            }
             train.setId(SnowUtil.getSnowflakeNextId());
             train.setCreateTime(now);
             train.setUpdateTime(now);
@@ -73,5 +80,12 @@ public class TrainService {
         trainExample.setOrderByClause("code asc");
         List<Train> trainList = trainMapper.selectByExample(trainExample);
         return BeanUtil.copyToList(trainList, TrainQueryResp.class);
+    }
+
+    private Train selectByUnique(String code) {
+        TrainExample trainExample = new TrainExample();
+        TrainExample.Criteria criteria = trainExample.createCriteria();
+        criteria.andCodeEqualTo(code);
+        return trainMapper.selectByExample(trainExample).get(0);
     }
 }
