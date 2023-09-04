@@ -2,8 +2,9 @@ package com.spongzi.train.business.mapper;
 
 import com.spongzi.train.business.domain.TrainStation;
 import com.spongzi.train.business.domain.TrainStationExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TrainStationMapper {
     long countByExample(TrainStationExample example);

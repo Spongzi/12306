@@ -6,7 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.spongzi.train.common.resp.PageResp;
-import com.spongzi.train.common.util.SnowUtil;
+import com.spongzi.train.common.utils.SnowUtil;
 import com.spongzi.train.${module}.domain.${Domain};
 import com.spongzi.train.${module}.domain.${Domain}Example;
 import com.spongzi.train.${module}.mapper.${Domain}Mapper;
