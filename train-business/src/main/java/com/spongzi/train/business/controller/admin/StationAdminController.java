@@ -4,6 +4,7 @@ import com.spongzi.train.business.req.StationQueryReq;
 import com.spongzi.train.business.req.StationSaveReq;
 import com.spongzi.train.business.resp.StationQueryResp;
 import com.spongzi.train.business.service.StationService;
+import com.spongzi.train.business.service.TrainSeatService;
 import com.spongzi.train.common.resp.CommonResp;
 import com.spongzi.train.common.resp.PageResp;
 import jakarta.annotation.Resource;
@@ -18,6 +19,9 @@ public class StationAdminController {
 
     @Resource
     private StationService stationService;
+
+    @Resource
+    private TrainSeatService trainSeatService;
 
     @PostMapping("/save")
     public CommonResp<Object> save(@Valid @RequestBody StationSaveReq req) {
@@ -41,6 +45,14 @@ public class StationAdminController {
     public CommonResp<List<StationQueryResp>> queryAll() {
         return CommonResp.<List<StationQueryResp>>builder()
                 .content(stationService.queryAll())
+                .build();
+    }
+
+    @GetMapping("/gen-seat/{trainCode}")
+    public CommonResp<Object> genSeat(@PathVariable String trainCode) {
+        trainSeatService.genTrainSeat(trainCode);
+        return CommonResp.builder()
+                .message("生成座位成功！")
                 .build();
     }
 
