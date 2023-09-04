@@ -87,18 +87,26 @@ public class TrainStationService {
     }
 
     private TrainStation selectByUnique(String trainCode, Integer index) {
-        TrainStationExample TrainStationExample = new TrainStationExample();
-        TrainStationExample.Criteria criteria = TrainStationExample.createCriteria();
+        TrainStationExample trainStationExample = new TrainStationExample();
+        TrainStationExample.Criteria criteria = trainStationExample.createCriteria();
         criteria.andTrainCodeEqualTo(trainCode)
                 .andIndexEqualTo(index);
-        return trainStationMapper.selectByExample(TrainStationExample).get(0);
+        return trainStationMapper.selectByExample(trainStationExample).get(0);
     }
 
     private TrainStation selectByUnique(String trainCode, String name) {
-        TrainStationExample TrainStationExample = new TrainStationExample();
-        TrainStationExample.Criteria criteria = TrainStationExample.createCriteria();
+        TrainStationExample trainStationExample = new TrainStationExample();
+        TrainStationExample.Criteria criteria = trainStationExample.createCriteria();
         criteria.andTrainCodeEqualTo(trainCode)
                 .andNameEqualTo(name);
-        return trainStationMapper.selectByExample(TrainStationExample).get(0);
+        return trainStationMapper.selectByExample(trainStationExample).get(0);
+    }
+
+    public List<TrainStation> selectByTrainCode(String trainCode) {
+        TrainStationExample trainStationExample = new TrainStationExample();
+        trainStationExample.setOrderByClause("train_code asc, `index` asc");
+        TrainStationExample.Criteria criteria = trainStationExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode);
+        return trainStationMapper.selectByExample(trainStationExample);
     }
 }
