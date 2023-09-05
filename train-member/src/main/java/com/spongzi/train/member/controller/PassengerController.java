@@ -10,6 +10,8 @@ import com.spongzi.train.member.service.PassengerService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/passenger")
 public class PassengerController {
@@ -37,5 +39,12 @@ public class PassengerController {
     public CommonResp<Object> delete(@PathVariable Long id) {
         passengerService.delete(id);
         return CommonResp.builder().message("删除成功").build();
+    }
+
+    @GetMapping("/query-mine")
+    public CommonResp<List<PassengerQueryResp>> queryMine() {
+        List<PassengerQueryResp> passengerQueryRespList = passengerService.queryMine();
+        return CommonResp.<List<PassengerQueryResp>>builder()
+                .content(passengerQueryRespList).build();
     }
 }
