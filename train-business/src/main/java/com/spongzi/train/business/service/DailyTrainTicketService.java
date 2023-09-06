@@ -144,4 +144,14 @@ public class DailyTrainTicketService {
             }
         }
     }
+
+    public DailyTrainTicket selectByUnique(Date date, String trainCode, String start, String end) {
+        DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();
+        DailyTrainTicketExample.Criteria criteria = dailyTrainTicketExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode)
+                .andDateEqualTo(date)
+                .andStartEqualTo(start)
+                .andEndEqualTo(end);
+        return dailyTrainTicketMapper.selectByExample(dailyTrainTicketExample).get(0);
+    }
 }
