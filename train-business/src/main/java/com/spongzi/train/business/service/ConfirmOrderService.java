@@ -4,12 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.spongzi.train.business.domain.ConfirmOrder;
 import com.spongzi.train.business.domain.ConfirmOrderExample;
 import com.spongzi.train.business.domain.DailyTrainTicket;
+import com.spongzi.train.business.enums.SeatColEnum;
 import com.spongzi.train.business.enums.SeatTypeEnum;
 import com.spongzi.train.business.mapper.ConfirmOrderMapper;
 import com.spongzi.train.business.req.ConfirmOrderDoReq;
@@ -27,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -99,7 +102,8 @@ public class ConfirmOrderService {
         confirmOrder.setStatus(INIT.getCode());
         confirmOrder.setCreateTime(now);
         confirmOrder.setUpdateTime(now);
-        confirmOrder.setTickets(JSON.toJSONString(req.getTickets()));
+        List<ConfirmOrderTicketReq> tickets = req.getTickets();
+        confirmOrder.setTickets(JSON.toJSONString(tickets));
         confirmOrderMapper.insert(confirmOrder);
 
         // 查出余票记录，需要得到真实的库存
@@ -108,6 +112,40 @@ public class ConfirmOrderService {
 
         //  扣减余票数量，并判断余票数是否充足
         reduceTickets(req, dailyTrainTicket);
+
+        // 计算相对第一个座位的偏移值
+        // 判断是否进行选座
+        ConfirmOrderTicketReq ticketReq0 = tickets.get(0);
+        if (StrUtil.isBlank(ticketReq0.getSeat())) {
+            LOG.info("本次购票没有选座");
+        } else {
+            LOG.info("本次购票有选座");
+            // 查出本次选座的类型有哪些，用于计算所选座位与第一个座位的偏离值
+            List<SeatColEnum> colEnumList = SeatColEnum.getColsByType(ticketReq0.getSeatTypeCode());
+            LOG.info("本次选座的座位类型包含的列：{}", colEnumList);
+            List<String> referSeatList = new ArrayList<>();
+            for (int i = 1; i < 2; i++) {
+                for (SeatColEnum seatColEnum : colEnumList) {
+                    referSeatList.add(seatColEnum.getCode() + i);
+                }
+            }
+            LOG.info("用于做参照的两排座位：{}", referSeatList);
+
+            // 绝对偏移值
+            List<Integer> absloteOffsetList = new ArrayList<>();
+            for (ConfirmOrderTicketReq ticketReq : tickets) {
+                int index = referSeatList.indexOf(ticketReq.getSeat());
+                absloteOffsetList.add(index);
+            }
+            LOG.info("计算得到所有座位的的绝对偏移值：{}", absloteOffsetList);
+            // 计算相对偏移值
+            List<Integer> offsetList = new ArrayList<>();
+            for (Integer index : absloteOffsetList) {
+                int offset = index - absloteOffsetList.get(0);
+                offsetList.add(offset);
+            }
+            LOG.info("计算得到所有座位的的相对偏移值：{}", absloteOffsetList);
+        }
 
         // 选座
 
