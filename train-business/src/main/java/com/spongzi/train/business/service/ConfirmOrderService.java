@@ -2,6 +2,7 @@ package com.spongzi.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
@@ -9,12 +10,16 @@ import com.github.pagehelper.PageInfo;
 import com.spongzi.train.business.domain.ConfirmOrder;
 import com.spongzi.train.business.domain.ConfirmOrderExample;
 import com.spongzi.train.business.domain.DailyTrainTicket;
+import com.spongzi.train.business.enums.SeatTypeEnum;
 import com.spongzi.train.business.mapper.ConfirmOrderMapper;
 import com.spongzi.train.business.req.ConfirmOrderDoReq;
 import com.spongzi.train.business.req.ConfirmOrderQueryReq;
 import com.spongzi.train.business.req.ConfirmOrderSaveReq;
+import com.spongzi.train.business.req.ConfirmOrderTicketReq;
 import com.spongzi.train.business.resp.ConfirmOrderQueryResp;
 import com.spongzi.train.common.context.LoginMemberContext;
+import com.spongzi.train.common.exception.BusinessException;
+import com.spongzi.train.common.exception.BusinessExceptionEnum;
 import com.spongzi.train.common.resp.PageResp;
 import com.spongzi.train.common.utils.SnowUtil;
 import jakarta.annotation.Resource;
@@ -101,8 +106,8 @@ public class ConfirmOrderService {
         DailyTrainTicket dailyTrainTicket = dailyTrainTicketService.selectByUnique(date, trainCode, start, end);
         LOG.info("查出余票记录：{}", dailyTrainTicket);
 
-
-        //  扣减余票数量，预减而不是真的减
+        //  扣减余票数量，并判断余票数是否充足
+        reduceTickets(req, dailyTrainTicket);
 
         // 选座
 
@@ -116,5 +121,48 @@ public class ConfirmOrderService {
             // 余票详情表修改余票
             // 为会员增加购票记录
             // 更新确认订单表位成功
+    }
+
+    /**
+     * 扣减余票数量
+     *
+     * @param req
+     * @param dailyTrainTicket
+     */
+    private static void reduceTickets(ConfirmOrderDoReq req, DailyTrainTicket dailyTrainTicket) {
+        for (ConfirmOrderTicketReq ticketReq: req.getTickets()) {
+            String seatTypeCode = ticketReq.getSeatTypeCode();
+            SeatTypeEnum seatTypeEnum = EnumUtil.getBy(SeatTypeEnum::getCode, seatTypeCode);
+            switch (seatTypeEnum) {
+                case YDZ -> {
+                    int countLeft = dailyTrainTicket.getYdz() - 1;
+                    if (countLeft < 0) {
+                        throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_TICKET_COUNT_ERROR);
+                    }
+                    dailyTrainTicket.setYdz(countLeft);
+                }
+                case EDZ -> {
+                    int countLeft = dailyTrainTicket.getEdz() - 1;
+                    if (countLeft < 0) {
+                        throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_TICKET_COUNT_ERROR);
+                    }
+                    dailyTrainTicket.setEdz(countLeft);
+                }
+                case RW -> {
+                    int countLeft = dailyTrainTicket.getRw() - 1;
+                    if (countLeft < 0) {
+                        throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_TICKET_COUNT_ERROR);
+                    }
+                    dailyTrainTicket.setRw(countLeft);
+                }
+                case YW -> {
+                    int countLeft = dailyTrainTicket.getYw() - 1;
+                    if (countLeft < 0) {
+                        throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_TICKET_COUNT_ERROR);
+                    }
+                    dailyTrainTicket.setYw(countLeft);
+                }
+            }
+        }
     }
 }
