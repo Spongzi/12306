@@ -1,0 +1,18 @@
+server:
+  port: 8003
+  servlet:
+    context-path: /batch
+spring:
+  application:
+    # 应用名称也是注册中心的名称
+    name: batch
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: 192.168.3.128:8848
+        file-extension: yaml
+        namespace: train
+      discovery:
+        server-addr: 192.168.3.128:8848

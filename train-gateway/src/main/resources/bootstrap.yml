@@ -1,0 +1,10 @@
+spring:
+  application:
+    # 应用名称也是注册中心的名称
+    name: gateway
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.3.128:8848
