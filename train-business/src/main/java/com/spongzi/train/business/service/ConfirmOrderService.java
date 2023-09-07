@@ -183,7 +183,7 @@ public class ConfirmOrderService {
         LOG.info("最终的选座：{}", finalSeatList);
 
         // 对选中的数据进行事务处理：
-        afterConfirmOrderService.afterDoConfirm(dailyTrainTicket, finalSeatList, tickets);
+        afterConfirmOrderService.afterDoConfirm(dailyTrainTicket, finalSeatList, tickets, confirmOrder);
     }
 
     /**
