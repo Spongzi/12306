@@ -11,8 +11,19 @@ spring:
     url: jdbc:mysql://192.168.3.128:3306/train_business?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai
     username: root
     password: root
+  data:
+    redis:
+      host: 192.168.3.128
+      port: 6379
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  cache:
+    type: redis
+    redis:
+      use-key-prefix: true
+      key-prefix: train_cache_
+      cache-null-values: false
+      time-to-live: 60s
 
 logging:
   config: classpath:logback.xml
