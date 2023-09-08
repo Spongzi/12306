@@ -31,6 +31,11 @@ public class StationService {
     @Resource
     private StationMapper stationMapper;
 
+    /**
+     * 保存站台信息
+     *
+     * @param req 请求体
+     */
     public void save(StationSaveReq req) {
         DateTime now = DateTime.now();
         Station station = BeanUtil.copyProperties(req, Station.class);
