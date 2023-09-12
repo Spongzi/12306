@@ -16,22 +16,22 @@ spring:
         namespace: train
       discovery:
         server-addr: 192.168.3.128:8848
-seata:
-  config:
-    nacos:
-      dataId: seataServer.properties
-      group: SEATA_GROUP
-      namespace: train
-      password: nacos
-      server-addr: 192.168.3.128:8848
-      username: nacos
-    type: nacos
-  registry:
-    nacos:
-      application: seata-server
-      group: SEATA_GROUP
-      namespace: train
-      password: nacos
-      server-addr: 192.168.3.128:8848
-      username: nacos
-    type: nacos
+#seata:
+#  config:
+#    nacos:
+#      dataId: seataServer.properties
+#      group: SEATA_GROUP
+#      namespace: train
+#      password: nacos
+#      server-addr: 192.168.3.128:8848
+#      username: nacos
+#    type: nacos
+#  registry:
+#    nacos:
+#      application: seata-server
+#      group: SEATA_GROUP
+#      namespace: train
+#      password: nacos
+#      server-addr: 192.168.3.128:8848
+#      username: nacos
+#    type: nacos
