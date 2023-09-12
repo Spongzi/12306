@@ -60,7 +60,7 @@ public class AfterConfirmOrderService {
             char[] chars = seatForUpdate.getSell().toCharArray();
             Integer maxStartIndex = endIndex - 1;
             Integer minEndIndex = startIndex + 1;
-            Integer minStartIndex = 0;
+            int minStartIndex = 0;
             for (int i = startIndex - 1; i >= 0; i--) {
                 char aChar = chars[i];
                 if (aChar == '1') {
@@ -68,7 +68,7 @@ public class AfterConfirmOrderService {
                     break;
                 }
             }
-            Integer maxEndIndex = seatForUpdate.getSell().length();
+            int maxEndIndex = seatForUpdate.getSell().length();
             for (int i = endIndex; i < seatForUpdate.getSell().length(); i++) {
                 char aChar = chars[i];
                 if (aChar == '1') {

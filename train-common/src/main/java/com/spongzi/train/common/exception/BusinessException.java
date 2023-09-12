@@ -1,5 +1,8 @@
 package com.spongzi.train.common.exception;
 
+import lombok.Getter;
+
+@Getter
 public class BusinessException extends RuntimeException {
 
     private BusinessExceptionEnum e;
@@ -8,8 +11,8 @@ public class BusinessException extends RuntimeException {
         this.e = e;
     }
 
-    public BusinessExceptionEnum getE() {
-        return e;
+    public BusinessException(String message) {
+        this.e = BusinessExceptionEnum.valueOf(message);
     }
 
     public void setE(BusinessExceptionEnum e) {
