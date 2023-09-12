@@ -17,9 +17,21 @@ spring:
       discovery:
         server-addr: 192.168.3.128:8848
 seata:
-  tx-service-group: train-group
-  service:
-    vgroup-mapping:
-      train-group: default
-    grouplist:
-      default: 127.0.0.1:8091
+  config:
+    nacos:
+      dataId: seataServer.properties
+      group: SEATA_GROUP
+      namespace: train
+      password: nacos
+      server-addr: 192.168.3.128:8848
+      username: nacos
+    type: nacos
+  registry:
+    nacos:
+      application: seata-server
+      group: SEATA_GROUP
+      namespace: train
+      password: nacos
+      server-addr: 192.168.3.128:8848
+      username: nacos
+    type: nacos
