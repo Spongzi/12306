@@ -20,6 +20,15 @@ spring:
       transport:
         port: 8719
         dashboard: 192.168.3.128:8858
+      datasource:
+        flow:
+          nacos:
+            server-addr: 192.168.3.128:8848
+            namespace: train
+            group-id: TRAIN_GROUP
+            data-id: sentinel
+            rule-type: flow
+
 #seata:
 #  config:
 #    nacos:
