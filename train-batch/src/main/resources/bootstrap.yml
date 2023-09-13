@@ -16,6 +16,17 @@ spring:
         namespace: train
       discovery:
         server-addr: 192.168.3.128:8848
+    sentinel:
+      datasource:
+        degrade:
+          nacos:
+            server-addr: 192.168.3.128:8848
+            namespace: train
+            group-id: TRAIN_GROUP
+            data-id: sentinel-batch-degrade
+            rule-type: degrade
+    openfeign:
+      lazy-attributes-resolution: true
 #seata:
 #  config:
 #    nacos:
@@ -35,3 +46,6 @@ spring:
 #      server-addr: 192.168.3.128:8848
 #      username: nacos
 #    type: nacos
+feign:
+  sentinel:
+    enabled: true
