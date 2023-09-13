@@ -49,6 +49,19 @@ public class ConfirmOrderDoReq {
     private Long dailyTrainTicketId;
 
     /**
+     * 图片验证码
+     */
+    @NotBlank(message = "【图片验证码】不能为空")
+    private String imageCode;
+
+
+    /**
+     * 图片验证码 token
+     */
+    @NotBlank(message = "【图片验证码】参数非法")
+    private String imageCodeToken;
+
+    /**
      * 车票
      */
     @NotEmpty(message = "【车票】不能为空")
