@@ -1,6 +1,6 @@
 package com.spongzi.train.business.controller.admin;
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.spongzi.train.business.req.ConfirmOrderDoReq;
 import com.spongzi.train.business.service.ConfirmOrderService;
 import com.spongzi.train.common.resp.CommonResp;
@@ -33,7 +33,7 @@ public class ConfirmOrderAdminController {
         String imageCode = req.getImageCode();
         String imageCodeRedis = redisTemplate.opsForValue().get(imageCodeToken);
         log.info("从redis中获取到的验证码：{}", imageCodeRedis);
-        if (ObjectUtil.isEmpty(imageCodeRedis)) {
+        if (StrUtil.isEmpty(imageCodeRedis)) {
             return CommonResp.builder().success(false).message("验证码不正确").build();
         }
         // 验证校验码，大小写忽略
