@@ -2,6 +2,7 @@ package com.spongzi.train.business.controller.admin;
 
 import cn.hutool.core.util.StrUtil;
 import com.spongzi.train.business.req.ConfirmOrderDoReq;
+import com.spongzi.train.business.service.BeforeConfirmOrderService;
 import com.spongzi.train.business.service.ConfirmOrderService;
 import com.spongzi.train.common.resp.CommonResp;
 import jakarta.annotation.Resource;
@@ -25,6 +26,9 @@ public class ConfirmOrderAdminController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Resource
+    private BeforeConfirmOrderService beforeConfirmOrderService;
+
     @PostMapping("/do")
     public CommonResp<Object> doConfirm(@Valid @RequestBody ConfirmOrderDoReq req) {
 
@@ -43,7 +47,7 @@ public class ConfirmOrderAdminController {
         // 验证码通过，移除验证码
         redisTemplate.delete(imageCodeToken);
 
-        confirmOrderService.doConfirm(req);
+        beforeConfirmOrderService.beforeDoConfirm(req);
         return CommonResp.builder().build();
     }
 
