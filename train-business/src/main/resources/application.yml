@@ -31,3 +31,8 @@ logging:
     com.spongzi.train: trace
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
+
+rocketmq:
+  name-server: http://192.168.3.128:9876
+  producer:
+    group: default

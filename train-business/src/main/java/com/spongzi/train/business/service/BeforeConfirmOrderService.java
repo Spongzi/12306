@@ -3,11 +3,13 @@ package com.spongzi.train.business.service;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.fastjson.JSON;
+import com.spongzi.train.business.enums.RocketMQTopicEnum;
 import com.spongzi.train.business.req.ConfirmOrderDoReq;
 import com.spongzi.train.common.context.LoginMemberContext;
 import com.spongzi.train.common.exception.BusinessException;
 import com.spongzi.train.common.exception.BusinessExceptionEnum;
 import jakarta.annotation.Resource;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
@@ -28,6 +30,9 @@ public class BeforeConfirmOrderService {
 
     @Resource
     private SkTokenService skTokenService;
+
+    @Resource
+    private RocketMQTemplate rocketMQTemplate;
 
 
 
@@ -66,7 +71,8 @@ public class BeforeConfirmOrderService {
             // 发送mq排队购票
             String reqJson = JSON.toJSONString(req);
             LOG.info("排队购票，发送mq开始，消息：{}", reqJson);
-            
+            rocketMQTemplate.convertAndSend(RocketMQTopicEnum.CONFIRM_ORDER.getCode(), reqJson);
+            LOG.info("排队购票，发送mq结束");
 
         } catch (Exception e) {
             // 最后程序结束释放锁
